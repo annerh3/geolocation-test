@@ -32,9 +32,9 @@ function App() {
       navigator.permissions.query({ name: "geolocation" }).then(result => {
         setGeoPermission(result.state);
         if (result.state === "granted") {
-          navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
+          navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {enableHighAccuracy: true});
         } else if (result.state === "prompt") {
-          navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
+          navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {enableHighAccuracy: true});
         } else {
           console.error("La geolocalizacion no está habilitada.");
         }
