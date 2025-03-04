@@ -2,7 +2,7 @@ import './App.css'
 import { useState } from 'react';
 
 function App() {
-  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [location, setLocation] = useState({ latitude: null, longitude: null, accuracy: null });
   const [geoPermission, setGeoPermission] = useState(null);
 
   /** @param {GeolocationPosition} position */
@@ -14,7 +14,9 @@ function App() {
     setLocation({
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,
+      accuracy: position.coords.accuracy
     });
+    return;
   };
 
   const handleError = (error) => {
@@ -30,7 +32,7 @@ function App() {
       navigator.permissions.query({ name: "geolocation" }).then(result => {
         setGeoPermission(result.state);
         if (result.state === "granted") {
-          navigator.geolocation.watchPosition(handleSuccess, handleError);
+          navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
         } else if (result.state === "prompt") {
           navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
         } else {
@@ -49,9 +51,15 @@ function App() {
         <button onClick={handleGetLocation}>Get Location</button>
         {geoPermission === "denied" && <p>La geolocalizacion no está habilitada. Habilítelo en la configuración de su navegador.</p>}
         {location.latitude && (
+          <div>
+
           <p>
             Latitude: {location.latitude}, Longitude: {location.longitude}
           </p>
+          <p>
+            Exactitud de: {location.accuracy} metros.
+          </p>
+          </div>
         )}
       </div>
     </>
